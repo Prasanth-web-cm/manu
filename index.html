@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Journey of Friendship</title>
+    <meta name="description" content="A cinematic celebration of an unforgettable friendship.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS (v3 CDN for simplicity) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        spaceBlack: '#0F172A',
+                        electricBlue: '#06B6D4',
+                        neonPurple: '#8B5CF6',
+                        softPink: '#EC4899',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-spaceBlack text-white antialiased overflow-x-hidden">
+
+    <!-- SECTION 0: Login Screen -->
+    <div id="login-screen" class="fixed inset-0 z-[200] bg-spaceBlack flex flex-col items-center justify-center px-4">
+        <!-- Glowing background elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-neonPurple/20 rounded-full blur-[100px]"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-electricBlue/20 rounded-full blur-[100px]"></div>
+        </div>
+        
+        <div class="relative z-10 glass-card p-10 md:p-14 rounded-3xl max-w-md w-full text-center border border-white/10 shadow-[0_0_50px_rgba(139,92,246,0.15)]">
+            <i class="fa-solid fa-lock text-4xl text-white/50 mb-6"></i>
+            <h2 class="font-serif text-3xl font-bold mb-2">Restricted Area</h2>
+            <p class="text-white/60 mb-8 text-sm">Enter the secret password to reveal the surprise.</p>
+            
+            <div class="space-y-4">
+                <input type="password" id="password-input" placeholder="Password..." class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 text-white placeholder-white/30 outline-none focus:border-neonPurple focus:bg-white/10 transition-all text-center tracking-widest">
+                <p id="login-error" class="text-softPink text-sm opacity-0 transition-opacity">Incorrect password. Try again.</p>
+                <button id="login-btn" class="w-full bg-gradient-to-r from-electricBlue to-neonPurple hover:from-neonPurple hover:to-softPink text-white font-medium py-4 rounded-xl transition-all duration-300 transform hover:-translate-y-1 shadow-[0_0_20px_rgba(139,92,246,0.4)]">
+                    Unlock Experience
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor Glow (Mouse Follower) -->
+    <div id="cursor-glow" class="fixed w-64 h-64 rounded-full pointer-events-none z-0 mix-blend-screen opacity-50 blur-[80px]" style="background: radial-gradient(circle, rgba(139,92,246,0.6) 0%, rgba(6,182,212,0.6) 100%); transform: translate(-50%, -50%); transition: top 0.1s, left 0.1s ease-out;"></div>
+
+    <!-- Scroll Progress Indicator -->
+    <div class="fixed top-0 left-0 w-full h-1 z-50 bg-white/10">
+        <div id="scroll-progress" class="h-full bg-gradient-to-r from-electricBlue via-neonPurple to-softPink w-0"></div>
+    </div>
+
+    <!-- Audio Toggle -->
+    <button id="audio-toggle" class="fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-white/20 transition-all shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+        <i class="fa-solid fa-music"></i>
+    </button>
+    <audio id="bg-music" loop>
+        <source src="https://assets.mixkit.co/music/preview/mixkit-cinematic-epic-emotional-main-979.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- SECTION 1: Cinematic Loading Screen -->
+    <div id="loader" class="fixed inset-0 z-[100] bg-spaceBlack flex flex-col items-center justify-center">
+        <div class="relative w-24 h-24 mb-8">
+            <div class="absolute inset-0 border-4 border-t-electricBlue border-r-neonPurple border-b-softPink border-l-transparent rounded-full animate-spin"></div>
+            <div class="absolute inset-2 border-4 border-t-softPink border-r-transparent border-b-electricBlue border-l-neonPurple rounded-full animate-spin-reverse"></div>
+        </div>
+        <p class="font-serif text-2xl md:text-3xl italic text-white/80 opacity-0" id="loader-text">"A journey is best measured in friends, rather than miles."</p>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="main-content" class="relative z-10 opacity-0 hidden">
+
+        <!-- SECTION 2: Hero Experience -->
+        <section id="hero" class="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
+            <!-- Background Video/Particles Area -->
+            <div class="absolute inset-0 z-0">
+                <div class="absolute inset-0 bg-spaceBlack/80 z-10"></div> <!-- Overlay -->
+                <!-- Placeholder for background video -->
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&q=80&w=2000" alt="Stars" class="w-full h-full object-cover object-center opacity-40">
+            </div>
+            
+            <div class="relative z-10 text-center max-w-4xl mx-auto space-y-6">
+                <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl font-bold mb-4 tracking-tight leading-tight glow-text">
+                    <span class="block">For My Best</span>
+                    <span class="block text-transparent bg-clip-text bg-gradient-to-r from-electricBlue via-neonPurple to-softPink">Friend</span>
+                </h1>
+                
+                <p id="hero-typewriter" class="font-sans text-lg md:text-2xl text-white/80 max-w-2xl mx-auto min-h-[80px]">
+                    <!-- Text injected via JS -->
+                </p>
+            </div>
+
+            <!-- Scroll Indicator -->
+            <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center animate-bounce">
+                <span class="text-xs uppercase tracking-[0.3em] mb-2 text-white/50">Scroll</span>
+                <div class="w-[1px] h-12 bg-gradient-to-b from-white/50 to-transparent"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: Our Friendship Journey -->
+        <section id="timeline" class="py-32 px-4 md:px-8 max-w-5xl mx-auto relative">
+            <h2 class="section-title text-center mb-24">The Journey</h2>
+            
+            <div class="relative">
+                <!-- Timeline Line -->
+                <div class="absolute left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-transparent via-neonPurple to-transparent -translate-x-1/2 hidden md:block"></div>
+
+                <!-- Timeline Items -->
+                <div class="space-y-24">
+                    <!-- Item 1 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center justify-between w-full">
+                        <div class="md:w-5/12 text-right md:pr-8 mb-6 md:mb-0">
+                            <h3 class="text-2xl font-serif text-electricBlue mb-2">The Beginning</h3>
+                            <p class="text-white/70">When we first crossed paths, little did I know you'd become such an essential part of my life. It was the start of an era.</p>
+                        </div>
+                        <div class="timeline-dot w-4 h-4 rounded-full bg-neonPurple shadow-[0_0_15px_#8B5CF6] z-10 hidden md:block"></div>
+                        <div class="md:w-5/12 glass-card rounded-2xl overflow-hidden aspect-[4/3] group cursor-pointer relative">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM.jpeg" alt="Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                <span class="text-white text-sm font-medium tracking-wider">Chapter One</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="timeline-item flex flex-col md:flex-row-reverse items-center justify-between w-full">
+                        <div class="md:w-5/12 text-left md:pl-8 mb-6 md:mb-0">
+                            <h3 class="text-2xl font-serif text-softPink mb-2">Countless Laughs</h3>
+                            <p class="text-white/70">Through the inside jokes that no one else understands, to the times we laughed until we couldn't breathe. Pure joy.</p>
+                        </div>
+                        <div class="timeline-dot w-4 h-4 rounded-full bg-softPink shadow-[0_0_15px_#EC4899] z-10 hidden md:block"></div>
+                        <div class="md:w-5/12 glass-card rounded-2xl overflow-hidden aspect-[4/3] group cursor-pointer relative">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM%20(1).jpeg" alt="Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                <span class="text-white text-sm font-medium tracking-wider">Unstoppable Laughter</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="timeline-item flex flex-col md:flex-row items-center justify-between w-full">
+                        <div class="md:w-5/12 text-right md:pr-8 mb-6 md:mb-0">
+                            <h3 class="text-2xl font-serif text-neonPurple mb-2">Standing By Each Other</h3>
+                            <p class="text-white/70">Through every storm, every challenge, we stood side by side. Your support has been my anchor.</p>
+                        </div>
+                        <div class="timeline-dot w-4 h-4 rounded-full bg-electricBlue shadow-[0_0_15px_#06B6D4] z-10 hidden md:block"></div>
+                        <div class="md:w-5/12 glass-card rounded-2xl overflow-hidden aspect-[4/3] group cursor-pointer relative">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM%20(2).jpeg" alt="Memory" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
+                                <span class="text-white text-sm font-medium tracking-wider">Always There</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: Magical Memory Gallery -->
+        <section id="gallery" class="py-32 bg-spaceBlack/50 relative">
+            <h2 class="section-title text-center mb-20">Fragments of Us</h2>
+            
+            <div class="max-w-7xl mx-auto px-4 columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
+                <!-- Gallery Item -->
+                <div class="gallery-img break-inside-avoid glass-card p-2 rounded-2xl hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all duration-500">
+                    <div class="overflow-hidden rounded-xl">
+                        <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM.jpeg" alt="Gallery" class="w-full hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                    </div>
+                </div>
+                <!-- Gallery Item -->
+                <div class="gallery-img break-inside-avoid glass-card p-2 rounded-2xl hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-all duration-500">
+                    <div class="overflow-hidden rounded-xl">
+                        <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM%20(1).jpeg" alt="Gallery" class="w-full hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                    </div>
+                </div>
+                <!-- Gallery Item -->
+                <div class="gallery-img break-inside-avoid glass-card p-2 rounded-2xl hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] transition-all duration-500">
+                    <div class="overflow-hidden rounded-xl">
+                        <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM%20(2).jpeg" alt="Gallery" class="w-full hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                    </div>
+                </div>
+                <!-- Gallery Item -->
+                <div class="gallery-img break-inside-avoid glass-card p-2 rounded-2xl hover:shadow-[0_0_30px_rgba(139,92,246,0.3)] transition-all duration-500">
+                    <div class="overflow-hidden rounded-xl">
+                        <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM.jpeg" alt="Gallery" class="w-full hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                    </div>
+                </div>
+                <!-- Gallery Item -->
+                <div class="gallery-img break-inside-avoid glass-card p-2 rounded-2xl hover:shadow-[0_0_30px_rgba(6,182,212,0.3)] transition-all duration-500">
+                    <div class="overflow-hidden rounded-xl">
+                        <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM%20(1).jpeg" alt="Gallery" class="w-full hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                    </div>
+                </div>
+                <!-- Gallery Item -->
+                <div class="gallery-img break-inside-avoid glass-card p-2 rounded-2xl hover:shadow-[0_0_30px_rgba(236,72,153,0.3)] transition-all duration-500">
+                    <div class="overflow-hidden rounded-xl">
+                        <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM%20(2).jpeg" alt="Gallery" class="w-full hover:scale-110 transition-transform duration-700 cursor-zoom-in">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 5: Video Memory Experience -->
+        <section id="video-section" class="py-32 px-4 relative overflow-hidden">
+            <!-- Decorative blur blobs -->
+            <div class="absolute top-1/2 left-0 -translate-y-1/2 w-96 h-96 bg-neonPurple/20 rounded-full blur-[120px] pointer-events-none"></div>
+            <div class="absolute top-1/2 right-0 -translate-y-1/2 w-96 h-96 bg-electricBlue/20 rounded-full blur-[120px] pointer-events-none"></div>
+
+            <div class="max-w-5xl mx-auto text-center relative z-10">
+                <h2 class="section-title mb-16">Moments in Motion</h2>
+                
+                <div class="relative rounded-3xl overflow-hidden glass-card p-2 md:p-4 group max-w-4xl mx-auto shadow-[0_0_40px_rgba(139,92,246,0.2)]">
+                    <div id="video-player" class="aspect-video relative rounded-2xl overflow-hidden bg-black flex items-center justify-center">
+                        <!-- Montage Images -->
+                        <div id="montage-container" class="absolute inset-0 w-full h-full opacity-60 transition-opacity duration-1000">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM.jpeg" class="montage-img absolute inset-0 w-full h-full object-cover opacity-100 scale-100">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM%20(1).jpeg" class="montage-img absolute inset-0 w-full h-full object-cover opacity-0 scale-100">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.04%20PM%20(2).jpeg" class="montage-img absolute inset-0 w-full h-full object-cover opacity-0 scale-100">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM.jpeg" class="montage-img absolute inset-0 w-full h-full object-cover opacity-0 scale-100">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM%20(1).jpeg" class="montage-img absolute inset-0 w-full h-full object-cover opacity-0 scale-100">
+                            <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM%20(2).jpeg" class="montage-img absolute inset-0 w-full h-full object-cover opacity-0 scale-100">
+                        </div>
+                        
+                        <!-- Play Button Overlay -->
+                        <div id="play-overlay" class="absolute inset-0 flex items-center justify-center bg-black/20 transition-opacity duration-500 z-20">
+                            <button id="montage-play-btn" class="relative w-20 h-20 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/30 text-white hover:bg-white/20 hover:scale-110 transition-all shadow-[0_0_20px_rgba(255,255,255,0.3)] group-hover:shadow-[0_0_30px_rgba(139,92,246,0.6)]">
+                                <i class="fa-solid fa-play text-2xl ml-1"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 6: Friendship Stats -->
+        <section id="stats" class="py-24 relative border-y border-white/5 bg-white/[0.02]">
+            <div class="max-w-6xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-4xl md:text-6xl font-bold font-serif bg-clip-text text-transparent bg-gradient-to-r from-electricBlue to-neonPurple mb-2"><span class="counter" data-target="2">0</span>+</span>
+                    <span class="text-white/60 text-sm tracking-widest uppercase">Years</span>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-4xl md:text-6xl font-bold font-serif bg-clip-text text-transparent bg-gradient-to-r from-neonPurple to-softPink mb-2"><span class="counter" data-target="100">0</span>+</span>
+                    <span class="text-white/60 text-sm tracking-widest uppercase">Photos</span>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-4xl md:text-6xl font-bold font-serif bg-clip-text text-transparent bg-gradient-to-r from-softPink to-electricBlue mb-2"><span class="counter" data-target="25">0</span></span>
+                    <span class="text-white/60 text-sm tracking-widest uppercase">Adventures</span>
+                </div>
+                <div class="stat-item flex flex-col items-center">
+                    <span class="text-4xl md:text-6xl font-bold font-serif text-white mb-2">&infin;</span>
+                    <span class="text-white/60 text-sm tracking-widest uppercase">Memories</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 7: Special Moments Showcase -->
+        <section id="polaroids" class="py-32 overflow-hidden relative">
+            <h2 class="section-title text-center mb-20">Prashu manu</h2>
+            
+            <div class="flex flex-wrap justify-center gap-12 max-w-6xl mx-auto px-4">
+                <!-- Polaroid 1 -->
+                <div class="polaroid bg-white p-4 pb-16 rounded-sm shadow-2xl transform -rotate-6 hover:rotate-0 hover:scale-105 transition-all duration-500 w-64 md:w-80 cursor-pointer relative z-10 hover:z-20">
+                    <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM.jpeg" alt="Moments" class="w-full h-auto aspect-square object-cover filter contrast-125 saturate-50 grayscale-[20%]">
+                    <div class="absolute bottom-5 left-0 right-0 text-center text-gray-800 font-serif italic text-xl">For my Friend</div>
+                </div>
+
+                <!-- Polaroid 2 -->
+                <div class="polaroid bg-white p-4 pb-16 rounded-sm shadow-2xl transform rotate-3 hover:rotate-0 hover:scale-105 transition-all duration-500 w-64 md:w-80 cursor-pointer relative z-10 hover:z-20 mt-12 md:mt-0">
+                    <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM%20(1).jpeg" alt="Moments" class="w-full h-auto aspect-square object-cover filter contrast-125 saturate-50 grayscale-[20%]">
+                    <div class="absolute bottom-5 left-0 right-0 text-center text-gray-800 font-serif italic text-xl">Best pics in college</div>
+                </div>
+
+                <!-- Polaroid 3 -->
+                <div class="polaroid bg-white p-4 pb-16 rounded-sm shadow-2xl transform -rotate-3 hover:rotate-0 hover:scale-105 transition-all duration-500 w-64 md:w-80 cursor-pointer relative z-10 hover:z-20 md:-mt-12">
+                    <img src="WhatsApp%20Image%202026-06-20%20at%205.17.05%20PM%20(2).jpeg" alt="Moments" class="w-full h-auto aspect-square object-cover filter contrast-125 saturate-50 grayscale-[20%]">
+                    <div class="absolute bottom-5 left-0 right-0 text-center text-gray-800 font-serif italic text-xl">Always vibing</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 8: Heartfelt Letter -->
+        <section id="letter" class="py-32 relative">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-neonPurple/5 to-transparent"></div>
+            
+            <div class="max-w-3xl mx-auto px-6 relative z-10">
+                <div class="glass-card rounded-3xl p-10 md:p-16 border border-white/10 relative overflow-hidden">
+                    <!-- Subtle glow behind letter -->
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-softPink/10 rounded-full blur-[80px]"></div>
+                    <div class="absolute bottom-0 left-0 w-64 h-64 bg-electricBlue/10 rounded-full blur-[80px]"></div>
+
+                    <i class="fa-solid fa-quote-left text-4xl text-white/20 mb-8"></i>
+                    
+                    <div class="prose prose-invert prose-lg md:prose-xl font-serif text-white/90 leading-relaxed space-y-6">
+                        <p class="letter-text">To my amazing best friend,</p>
+                        <p class="letter-text">Looking back at all these moments, I realize how lucky I am. We've grown together, laughed together, and created a bond that simply can't be broken.</p>
+                        <p class="letter-text">This isn't just a website; it's a small piece of my heart, a digital monument to the memories we've built. Thank you for being you, for understanding me without words, and for making life an incredibly beautiful adventure.</p>
+                        <p class="letter-text">Here's to the memories we've made, and the countless more waiting for us.</p>
+                        <p class="letter-text pt-4 font-bold bg-clip-text text-transparent bg-gradient-to-r from-electricBlue to-softPink w-fit">With endless love.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 9: Grand Finale -->
+        <section id="finale" class="min-h-screen flex flex-col items-center justify-center relative overflow-hidden text-center px-4">
+            
+            <!-- Intense Background Glows -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vw] md:w-[40vw] md:h-[40vw] rounded-full bg-gradient-to-r from-electricBlue via-neonPurple to-softPink opacity-20 blur-[150px] animate-pulse"></div>
+
+            <div class="relative z-10 max-w-4xl mx-auto space-y-8">
+                <h2 class="font-serif text-5xl md:text-7xl font-bold mb-8">
+                    Thank You For Being Part Of My Journey <span class="text-red-500 animate-pulse inline-block">❤️</span>
+                </h2>
+                
+                <div class="font-sans text-xl md:text-2xl text-white/80 space-y-4 max-w-2xl mx-auto font-light finale-text">
+                    <p>Some friendships become memories.</p>
+                    <p>Some memories become treasures.</p>
+                    <p class="text-white font-medium">And some treasures last forever.</p>
+                    <p class="text-sm mt-16 font-medium text-white/60 tracking-widest uppercase pt-8">The web is made for you, Manu</p>
+                </div>
+            </div>
+
+            <!-- Scroll to Top Button -->
+            <button id="back-to-top" class="mt-24 px-8 py-4 rounded-full glass-card border border-white/20 text-white hover:bg-white/10 transition-all flex items-center gap-3 group">
+                <span>Relive the Journey</span>
+                <i class="fa-solid fa-arrow-up transition-transform group-hover:-translate-y-1"></i>
+            </button>
+        </section>
+
+    </main>
+
+    <!-- GSAP -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="script.js"></script>
+</body>
+</html>

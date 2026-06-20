@@ -1,0 +1,114 @@
+/* style.css */
+
+/* Base Styles & Overrides */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    background-color: #0F172A;
+    /* Hide horizontal scrollbar to prevent layout breaks on animations */
+    overflow-x: hidden;
+}
+
+/* Custom Scrollbar for a premium feel */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #0F172A;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.5); /* neonPurple with opacity */
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(6, 182, 212, 0.8); /* electricBlue */
+}
+
+/* Glassmorphism Utilities */
+.glass-card {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Text Glow Effects */
+.glow-text {
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Section Titles Cinematic Styling */
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #fff, rgba(255,255,255,0.5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@media (min-width: 768px) {
+    .section-title {
+        font-size: 4.5rem;
+    }
+}
+
+/* Timeline Custom Styles */
+.timeline-item {
+    position: relative;
+    /* initial state for gsap */
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.timeline-dot {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Loader Spin Reverse Animation */
+@keyframes spin-reverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.animate-spin-reverse {
+    animation: spin-reverse 1s linear infinite;
+}
+
+/* Polaroid Styles */
+.polaroid {
+    background: #ffffff;
+    padding: 1rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), z-index 0s;
+}
+
+.polaroid img {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+}
+
+/* Mouse Follower constraints */
+#cursor-glow {
+    pointer-events: none;
+    z-index: 1; /* Below content, above background */
+    will-change: transform;
+}
+
+/* Hide cursor on desktop to emphasize glow (optional, decided to keep it but add glow behind) */
+/* body { cursor: none; } */
+/* a, button, .cursor-pointer { cursor: none; } */
+
+/* Image selection prevention */
+img {
+    user-select: none;
+    -webkit-user-drag: none;
+}
